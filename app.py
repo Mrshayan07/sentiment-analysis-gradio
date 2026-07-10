@@ -45,4 +45,7 @@ demo = gr.Interface(
     description="Predict whether a sentence is Positive or Negative using a Hugging Face Transformer model."
 )
 
-demo.launch()
+demo.launch(
+    server_name="0.0.0.0",
+    server_port=int(os.environ.get("PORT", 7860))
+)

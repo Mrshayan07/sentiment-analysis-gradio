@@ -1,8 +1,7 @@
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 import torch
-import gradio as gr
-import os
+
 MODEL_NAME = "distilbert-base-uncased-finetuned-sst-2-english"
 
 # Load tokenizer and model
@@ -31,21 +30,33 @@ def predict_sentiment(text):
     return label, f"{confidence*100:.2f}%"
 
 
-demo = gr.Interface(
-    fn=predict_sentiment,
-    inputs=gr.Textbox(
-        lines=5,
-        placeholder="Enter your text here..."
-    ),
-    outputs=[
-        gr.Textbox(label="Sentiment"),
-        gr.Textbox(label="Confidence")
-    ],
-    title="😊 Sentiment Analysis using DistilBERT",
-    description="Predict whether a sentence is Positive or Negative using a Hugging Face Transformer model."
-)
+import streamlit as st
 
-demo.launch(
-    server_name="0.0.0.0",
-    server_port=int(os.getenv("PORT", 7861))
-)
+st.title("😊 Sentiment Analysis using DistilBERT")
+
+text = st.text_area("Enter your text")
+
+if "label" not in st.session_state:
+    st.session_state.label = None
+    st.session_state.confidence = None
+
+if st.button("Predict"):
+    label, confidence = predict_sentiment(text)
+
+    st.session_state.label = label
+    st.session_state.confidence = confidence
+
+    st.success(f"Sentiment: {label}")
+    st.info(f"Confidence: {confidence}")
+
+if st.button("🚩 Save Feedback"):
+
+    if st.session_state.label is None:
+        st.warning("Please predict first!")
+    else:
+        with open("feedback.csv", "a") as f:
+            f.write(
+                f"{text},{st.session_state.label},{st.session_state.confidence}\n"
+            )
+
+        st.success("Feedback saved!")

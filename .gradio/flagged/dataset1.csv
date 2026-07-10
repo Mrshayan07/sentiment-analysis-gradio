@@ -1,0 +1,3 @@
+text,Sentiment,Confidence,timestamp
+I love this Movie,POSITIVE,99.99%,2026-07-10 09:56:43.319609
+I hate this Movie,NEGATIVE,99.97%,2026-07-10 09:57:02.383726

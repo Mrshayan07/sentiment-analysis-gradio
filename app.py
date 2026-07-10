@@ -2,7 +2,7 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 import torch
 import gradio as gr
-
+import os
 MODEL_NAME = "distilbert-base-uncased-finetuned-sst-2-english"
 
 # Load tokenizer and model
@@ -47,5 +47,5 @@ demo = gr.Interface(
 
 demo.launch(
     server_name="0.0.0.0",
-    server_port=int(os.environ.get("PORT", 7860))
+    server_port=int(os.getenv("PORT", 7861))
 )
